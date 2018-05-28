@@ -1,6 +1,17 @@
 using System;
 using UnityEngine;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Linq;
+
+
+namespace VTK
+{
+    class vtkCompound
+    {
+        [DllImport("vtkplugin")] unsafe public static extern void free_data(IntPtr h);
+    }
+}
 
 public class ReturnPointer
 {

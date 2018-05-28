@@ -5,7 +5,7 @@ project(vtk-interface)
 set (py_cmd "${PROJECT_SOURCE_DIR}/generate_api/generate.py")
 set (PREDEFINED_SOURCE "${PROJECT_SOURCE_DIR}/src")
 set (GENERATED_SOURCE "${CMAKE_CURRENT_BINARY_DIR}/src")
-set (GENERATED_API "${PROJECT_SOURCE_DIR}/VertikalProject/Assets/Scripts")
+set (GENERATED_API "${PROJECT_SOURCE_DIR}/VertikalProject/Assets/Vertikal/Scripts")
 
 file(MAKE_DIRECTORY ${GENERATED_SOURCE})
 file(MAKE_DIRECTORY ${GENERATED_API})
