@@ -587,7 +587,7 @@ def printInterfaceFunctionSignature(function):
     hide = False
     try: 
         # print(function["className"] +", " + function["complete"])
-        hide = CONFIG["CONFIG"][function["className"]][function["complete"]]["hide"]
+        hide = CONFIG["OPTIONS"][function["className"]][function["complete"]]["hide"]
         # print(hide)
     except:
         pass
@@ -641,7 +641,7 @@ def printInterfaceFunctionSignatureID(function):
 
     hide = False
     try: 
-        hide = CONFIG["CONFIG"][className][functionName]["hide"]
+        hide = CONFIG["OPTIONS"][className][functionName]["hide"]
     except:
         pass
 
@@ -746,7 +746,7 @@ def defaultnum(function) :
     functionName = function["complete"]
     numElements = 1
     try: 
-        numElements = CONFIG["CONFIG"][className][functionName]["returnElements"]
+        numElements = CONFIG["OPTIONS"][className][functionName]["returnElements"]
         #print(numElements)
     except:
         pass
@@ -958,8 +958,9 @@ def generateCodeForClass(functions, className, parent, APIPath, interfacePath):
     INTERFACE_OUTPUT.write(printInterfaceCode(functions, className,parent))
 
 
-def handleClassNames(classNames,VTKpath, shouldRecurse, APIPath,interfacePath,config):
-    CONFIG["CONFIG"] = config
+def handleClassNames(classNames,VTKpath, shouldRecurse, APIPath,interfacePath,config, compiler):
+    CONFIG["OPTIONS"] = config
+    CONFIG["COMPILER"] = compiler
     requiredClasses = Set()
     for n in classNames:
         requiredClasses.add(n)
@@ -1037,8 +1038,8 @@ def getFileTextForClassname(VTKPath, class_name, preprocess=False):
         return None
     if(preprocess):
         FNULL = open(os.devnull, 'w')
-        print(['g++', '-E', '{}'.format(headerFile)])
-        return subprocess.check_output(['g++', '-E', '{}'.format(headerFile)], stderr=FNULL)
+        print([CONFIG["COMPILER"], '-E', '{}'.format(headerFile)])
+        return subprocess.check_output([CONFIG["COMPILER"], '-E', '{}'.format(headerFile)], stderr=FNULL)
     else:
         with open(headerFile, 'r') as myfile:
             data = myfile.read()

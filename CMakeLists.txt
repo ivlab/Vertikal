@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 2.6)
 
 project(vtk-interface)
 
+
+message("${CMAKE_CXX_COMPILER_ID}")
+
+
 set (py_cmd "${PROJECT_SOURCE_DIR}/generate_api/generate.py")
 set (PREDEFINED_SOURCE "${PROJECT_SOURCE_DIR}/src")
 set (GENERATED_SOURCE "${CMAKE_CURRENT_BINARY_DIR}/src")
@@ -26,7 +30,7 @@ file(REMOVE ${CURRENT_API})
 
 
 execute_process(
-	COMMAND python ${py_cmd} "${VTK_INCLUDE_DIRS}" "${GENERATED_SOURCE}" "${GENERATED_API}"
+	COMMAND python ${py_cmd} "${VTK_INCLUDE_DIRS}" "${GENERATED_SOURCE}" "${GENERATED_API}" "${CMAKE_CXX_COMPILER_ID}"
 	)
 
 
