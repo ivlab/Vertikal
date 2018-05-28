@@ -31,7 +31,7 @@ print("VTK:" + str(VTKpath))
 
 
 #classNames = ['vtkPoints']
-COMPILER = sys.argv[4]
+COMPILER = "g++" #sys.argv[4]
 CONFIG = json.load(open(os.path.dirname(os.path.realpath(__file__)) + "/" + "api_options.txt"))
 
 classNames = [line.rstrip('\n') for line in open(os.path.dirname(os.path.realpath(__file__)) + "/" + "requested_classes.txt")]

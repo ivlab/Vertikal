@@ -1,15 +1,27 @@
 cmake_minimum_required(VERSION 2.6)
 
 project(vtk-interface)
+set(GENERATE_API FALSE)
 
 
-message("${CMAKE_CXX_COMPILER_ID}")
+get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(dir ${dirs})
+  message(STATUS "dir='${dir}'")
+endforeach()
+
+message("${CMAKE_CXX_COMPILER}")
 
 
 set (py_cmd "${PROJECT_SOURCE_DIR}/generate_api/generate.py")
 set (PREDEFINED_SOURCE "${PROJECT_SOURCE_DIR}/src")
-set (GENERATED_SOURCE "${CMAKE_CURRENT_BINARY_DIR}/src")
+set (GENERATED_SOURCE "${PROJECT_SOURCE_DIR}/src")
+
+
+if(GENERATE_API)
 set (GENERATED_API "${PROJECT_SOURCE_DIR}/VertikalProject/Assets/Vertikal/Scripts")
+else()
+set (GENERATED_API "${PROJECT_SOURCE_DIR}/VertikalProject/Assets/Vertikal/Scripts")
+endif()
 
 file(MAKE_DIRECTORY ${GENERATED_SOURCE})
 file(MAKE_DIRECTORY ${GENERATED_API})
@@ -26,12 +38,15 @@ file(GLOB CURRENT_API
     "NULL"
 )
 
+if(GENERATE_API)
+
 file(REMOVE ${CURRENT_API})
 
 
 execute_process(
 	COMMAND python ${py_cmd} "${VTK_INCLUDE_DIRS}" "${GENERATED_SOURCE}" "${GENERATED_API}" "${CMAKE_CXX_COMPILER_ID}"
 	)
+endif()
 
 
 file(GLOB API_src
