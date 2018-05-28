@@ -38,6 +38,8 @@ file(GLOB API_src
 add_library(vtklib ${API_src})
 target_link_libraries(vtklib ${VTK_LIBRARIES})
 
+add_executable(main main.c)
+target_link_libraries(main vtklib ${VTK_LIBRARIES})
 
 # Unity bundle plugin
 add_library(vtkplugin MODULE ${API_src})
