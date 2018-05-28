@@ -32,13 +32,13 @@ execute_process(
 
 file(GLOB API_src
     "${GENERATED_SOURCE}/*.cpp"
-    "${PREDEFINED_SOURCE}/*.cpp"
+    "${PREDEFINED_SOURCE}/custom.cpp"
 )
 
 add_library(vtklib ${API_src})
 target_link_libraries(vtklib ${VTK_LIBRARIES})
 
-add_executable(main main.c)
+add_executable(main ${PREDEFINED_SOURCE}/main.cpp)
 target_link_libraries(main vtklib ${VTK_LIBRARIES})
 
 # Unity bundle plugin
