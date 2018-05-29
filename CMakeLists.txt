@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 project(vtk-interface)
 
 #If you're ready to fix issues with self-generation, set this to true
-set(GENERATE_API TRUE)
+set(GENERATE_API FALSE)
 set(SAVE_API TRUE)
 
 message("${CMAKE_CXX_COMPILER}")
