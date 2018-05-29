@@ -1,71 +1,74 @@
 cmake_minimum_required(VERSION 2.6)
 
 project(vtk-interface)
-set(GENERATE_API FALSE)
 
-
-get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach(dir ${dirs})
-  message(STATUS "dir='${dir}'")
-endforeach()
+#If you're ready to fix issues with self-generation, set this to true
+set(GENERATE_API TRUE)
+set(SAVE_API TRUE)
 
 message("${CMAKE_CXX_COMPILER}")
 
-
 set (py_cmd "${PROJECT_SOURCE_DIR}/generate_api/generate.py")
-set (PREDEFINED_SOURCE "${PROJECT_SOURCE_DIR}/src")
-set (GENERATED_SOURCE "${PROJECT_SOURCE_DIR}/src")
-
-
-if(GENERATE_API)
+set (PREDEFINED_SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
+set (SAVED_SOURCE_DIR "${PROJECT_SOURCE_DIR}/src_saved")
 set (GENERATED_API "${PROJECT_SOURCE_DIR}/VertikalProject/Assets/Vertikal/Scripts")
+set (GENERATED_SOURCE_DIR "${CMAKE_CURRENT_BINARY_DIR}/src")
+
+
+if(SAVE_API)
+	set (SOURCE_DIR "${SAVED_SOURCE_DIR}")
 else()
-set (GENERATED_API "${PROJECT_SOURCE_DIR}/VertikalProject/Assets/Vertikal/Scripts")
+	set (SOURCE_DIR "${GENERATED_SOURCE_DIR}")
+
 endif()
 
-file(MAKE_DIRECTORY ${GENERATED_SOURCE})
+# if(GENERATE_API)
+# else()
+# endif()
+
+file(MAKE_DIRECTORY ${SOURCE_DIR})
 file(MAKE_DIRECTORY ${GENERATED_API})
 file(MAKE_DIRECTORY ${GENERATED_API}/API)
 
 find_package(VTK)
 include(${VTK_USE_FILE})
 
-
-file(MAKE_DIRECTORY "NULL")
 file(GLOB CURRENT_API
     "${GENERATED_API}/vtk*.cs"
     "${GENERATED_API}/API/*.cs"
-    "NULL"
 )
 
 if(GENERATE_API)
 
-file(REMOVE ${CURRENT_API})
+	# Currently g++ is the only pre-processor that finds system includes.
+	# Once this is solved for Clang and Visual Studio compiler, switch 
+	# the next two lines:
+	#set (PREPROCESSOR "${PROJECT_SOURCE_DIR}/src")
+	set (PREPROCESSOR "g++")
 
-
-execute_process(
-	COMMAND python ${py_cmd} "${VTK_INCLUDE_DIRS}" "${GENERATED_SOURCE}" "${GENERATED_API}" "${CMAKE_CXX_COMPILER_ID}"
+	#Remove the old API files
+	if ("${CURRENT_API}" STREQUAL "")
+		file(REMOVE ${CURRENT_API})
+	endif()
+	execute_process(
+		COMMAND 
+		python ${py_cmd} "${VTK_INCLUDE_DIRS}" "${SOURCE_DIR}" "${GENERATED_API}" "${PREPROCESSOR}"
 	)
+
+
 endif()
 
 
-file(GLOB API_src
-    "${GENERATED_SOURCE}/*.cpp"
-    "${PREDEFINED_SOURCE}/custom.cpp"
+file(GLOB GENERATED_src
+    "${SOURCE_DIR}/*.cpp"
 )
 
-add_library(vtklib ${API_src})
-target_link_libraries(vtklib ${VTK_LIBRARIES})
 
-add_executable(main ${PREDEFINED_SOURCE}/main.cpp)
-target_link_libraries(main vtklib ${VTK_LIBRARIES})
 
 # Unity bundle plugin
-add_library(vtkplugin MODULE ${API_src})
+add_library(vtkplugin MODULE "${GENERATED_src}" "${PREDEFINED_SOURCE_DIR}/custom.cpp")
 target_link_libraries(vtkplugin ${VTK_LIBRARIES})
 set_target_properties(vtkplugin PROPERTIES BUNDLE TRUE)
-set_target_properties(vtkplugin PROPERTIES LINK_SEARCH_START_STATIC 1)
-set_target_properties(vtkplugin PROPERTIES LINK_SEARCH_END_STATIC 1)
 
 
 install(TARGETS vtkplugin DESTINATION .)
