@@ -1,0 +1,33 @@
+{
+    "vtkDataSet": {
+        "virtual double *GetPoint(vtkIdType ptId)": {
+            "returnElements": 3
+        },
+        "double *GetBounds()": {
+            "hide": true,
+            "returnElements": 6
+        },
+        "virtual double *GetPoint(vtkIdType ptId)": {
+            "hide": true
+        },
+        "virtual void GetPoint(vtkIdType id, double x[3])": {
+            "hide": true
+        }
+    },
+    "vtkPoints": {
+        "double *GetPoint(vtkIdType id)": {
+            "hide": true
+        },
+        "void GetPoint(vtkIdType id, double x[3])": {
+            "hide": true
+        }
+    },
+    "vtkPointSet": {
+        "double *GetPoint(vtkIdType id)": {
+            "hide": true
+        },
+        "void GetPoint(vtkIdType id, double x[3])": {
+            "hide": true
+        }
+    }
+}
