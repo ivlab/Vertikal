@@ -13,3 +13,4 @@ vtkXMLPolyDataReader
 vtkXMLUnstructuredGridReader
 vtkXMLPolyDataReader
 vtkVersion
+vtkMeshQuality
